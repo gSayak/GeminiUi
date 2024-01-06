@@ -8,19 +8,16 @@ import google.generativeai as genai
 def get_answer(query):
     secret_api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=secret_api_key)    
-    # env_path = pathlib.Path('.') / '.local.env'
-    # load_dotenv(dotenv_path=env_path)
-    # GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-    # genai.configure(api_key=GOOGLE_API_KEY)
+    result_container = st.empty()
 
     for m in genai.list_models():
         if 'generateContent' in m.supported_generation_methods:
             print(m.name)
-    
+    result_container.text("Generating content...")
     model = genai.GenerativeModel('gemini-pro')
     response = model.generate_content(query)
-
-    return response.text
+    with result_container:
+        st.write(response.text)
 
 
 def main():
@@ -33,8 +30,7 @@ def main():
         st.write(text)
     query = st.text_input("Enter your query here")
     if query:
-        answer = get_answer(query)
-        st.write(answer)
+        get_answer(query)
 
 if __name__ == "__main__":
     main()
