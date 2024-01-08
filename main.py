@@ -21,7 +21,7 @@ def get_answer(query):
     
     model = genai.GenerativeModel('gemini-pro')
     try:
-        response = model.generate_content(query)
+        response = model.generate_content(query, stream=True)
     except Exception as e:
         result_container.error(f"Error: {e}")
         st.write(error)
